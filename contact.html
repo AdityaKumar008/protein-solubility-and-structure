@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Protein Production</title>
+    <!-- Google Fonts Import for 'Inter' -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS rules applied to all pages for consistency */
+        :root {
+            --bg: #0b0b0d;
+            --muted: rgba(255, 255, 255, 0.65);
+            --accent1: #6c2cf5;
+            --accent2: #3b8bff;
+            font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevents scrolling on this page */
+        }
+
+        body {
+            background: linear-gradient(180deg, #0b0b0d 0%, #0e0b1a 50%, #1b1a2b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* The main container for the page content */
+        .container {
+            width: 100%;
+            max-width: 1200px; /* Limits content width on large screens */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end; /* Navbar to right side */
+            padding: 28px 0;
+            flex-shrink: 0; /* Prevents header from shrinking */
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 10px;
+            transition: all 0.25s ease;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+        
+        nav a.active {
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            font-weight: 525;
+            color: #fff;
+        }
+
+        /* Content area styling */
+        .page-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .page-content h1 {
+            font-size: 48px;
+            margin: 0 0 40px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+        }
+
+        .contact-wrapper {
+            display: flex;
+            gap: 60px;
+            align-items: flex-start;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-info h2 {
+            font-size: 32px;
+            margin: 0 0 15px;
+            font-weight: 600;
+        }
+
+        .contact-info p {
+            font-size: 16px;
+            color: var(--muted);
+            line-height: 1.7;
+            margin: 0 0 25px;
+            max-width: 400px;
+        }
+
+        .contact-details p {
+            font-size: 16px;
+            margin: 10px 0;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-details p svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            fill: var(--accent2);
+        }
+
+        .contact-form {
+            flex: 1.2;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        input, textarea {
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            outline: none;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 15px;
+            resize: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--accent1);
+        }
+
+        textarea {
+            height: 120px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            border: 0;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .btn.primary {
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            box-shadow: 0 10px 30px rgba(99, 41, 255, 0.18);
+            color: #fff;
+        }
+
+        .btn.primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(99, 41, 255, 0.25);
+        }
+        
+        .bg-glow {
+            position: fixed;
+            right: -10vh;
+            top: -10vh;
+            width: 60vh;
+            height: 60vh;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4d2cff 0%, rgba(77, 44, 255, 0.2) 20%, transparent 50%);
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 900px) {
+            html, body { overflow: auto; } /* Allow scrolling on smaller screens */
+            .contact-wrapper { flex-direction: column; gap: 40px; }
+            .page-content h1 { font-size: 40px; margin-bottom: 30px; }
+            .contact-info { text-align: center; }
+            .contact-info p { margin-left: auto; margin-right: auto; }
+            .contact-details p { justify-content: center; }
+            header { justify-content: center; padding: 15px 0; }
+            nav { font-size: 16px; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="container">
+        <header>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="protein_details.html">Protein Details</a>
+                <a href="data_methods.html">Data & Methods</a>
+                <a href="about.html">About</a>
+                <a href="contact.html" class="active">Contact</a>
+            </nav>
+        </header>
+
+        <main class="page-content">
+            <h1>Get In Touch</h1>
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <h2>Let's Connect</h2>
+                    <p>I'd love to hear from you! Whether you have a question about the project, a suggestion, or just want to say hi, feel free to reach out using the form or the contact details below.</p>
+                    <div class="contact-details">
+                        <p>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6ZM20 6L12 11L4 6H20ZM20 18H4V8L12 13L20 8V18Z"/></svg>
+                            project@email.com
+                        </p>
+                        <p>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.62 10.79C8.06 13.62 10.38 15.94 13.21 17.38L15.41 15.18C15.69 14.9 16.08 14.82 16.43 14.93C17.55 15.3 18.75 15.5 20 15.5C20.55 15.5 21 15.95 21 16.5V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z"/></svg>
+                            +91 1234567890
+                        </p>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <!-- MODIFICATION: Add action and method attributes -->
+                    <form action="https://formspree.io/f/your_unique_id" method="POST">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                        <input type="email" name="email" placeholder="Your Email" required>
+                        <textarea name="message" placeholder="Your Message" required></textarea>
+                        <button type="submit" class="btn primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODIFICATION: The script tag is no longer needed -->
+    <!-- 
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert('Thank you for your message! I will get back to you soon.');
+            this.reset();
+        });
+    </script> 
+    -->
+</body>
+</html>
+

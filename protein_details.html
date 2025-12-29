@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details - Protein Production</title>
+    <!-- Google Fonts Import for 'Inter' -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS rules applied to all pages for consistency */
+        :root {
+            --bg: #0b0b0d;
+            --muted: rgba(255, 255, 255, 0.65);
+            --accent1: #6c2cf5;
+            --accent2: #3b8bff;
+            font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            /* Allow vertical scrolling while hiding horizontal scrollbar */
+            overflow-x: hidden;
+        }
+
+        body {
+            background: linear-gradient(180deg, #0b0b0d 0%, #0e0b1a 50%, #1b1a2b 100%);
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+
+        /* The main container for the page content */
+        .container {
+            width: 100%;
+            max-width: 1200px; /* Limits content width on large screens */
+            margin: 0 auto; /* Center the container */
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end; /* Navbar to right side */
+            padding: 28px 0;
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 10px;
+            transition: all 0.25s ease;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+        
+        /* The active link has a unique background */
+        nav a.active {
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            font-weight: 525;
+            color: #fff;
+        }
+
+        /* Content area styling */
+        .page-content {
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .page-content h1 {
+            font-size: 48px;
+            margin: 0 0 40px;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        /* Grid for Amino Acids */
+        .amino-acid-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .amino-acid-card {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .amino-acid-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+            border-color: var(--accent1);
+        }
+
+        .amino-acid-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 10px;
+            color: #fff;
+        }
+
+        .amino-acid-card p {
+            font-size: 16px;
+            color: var(--muted);
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .project-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        /* Background glow effect */
+        .bg-glow {
+            position: fixed;
+            right: -10vh;
+            top: -10vh;
+            width: 60vh;
+            height: 60vh;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4d2cff 0%, rgba(77, 44, 255, 0.2) 20%, transparent 50%);
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 1100px) {
+            .amino-acid-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        @media (max-width: 900px) {
+            .amino-acid-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .page-content h1 {
+                font-size: 40px;
+            }
+            header {
+                justify-content: center;
+                padding: 15px 0;
+            }
+            nav {
+                font-size: 16px;
+                gap: 8px; /* Tighter gap for smaller screens */
+                flex-wrap: wrap; 
+                justify-content: center;
+            }
+            nav a {
+                padding: 6px 10px;
+            }
+        }
+        @media (max-width: 600px) {
+            .amino-acid-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="container">
+        <header>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="protein_details.html" class="active">Protein Details</a>
+                <a href="data_methods.html">Data & Methods</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </header>
+
+        <main class="page-content">
+            <h1>20 Standard Amino Acids</h1>
+            <div class="amino-acid-grid">
+                <!-- Row 1 -->
+                <div class="amino-acid-card"><h3>Alanine</h3><p>A | Ala</p></div>
+                <div class="amino-acid-card"><h3>Arginine</h3><p>R | Arg</p></div>
+                <div class="amino-acid-card"><h3>Asparagine</h3><p>N | Asn</p></div>
+                <div class="amino-acid-card"><h3>Aspartic Acid</h3><p>D | Asp</p></div>
+                <div class="amino-acid-card"><h3>Cysteine</h3><p>C | Cys</p></div>
+                <!-- Row 2 -->
+                <div class="amino-acid-card"><h3>Glutamine</h3><p>Q | Gln</p></div>
+                <div class="amino-acid-card"><h3>Glutamic Acid</h3><p>E | Glu</p></div>
+                <div class="amino-acid-card"><h3>Glycine</h3><p>G | Gly</p></div>
+                <div class="amino-acid-card"><h3>Histidine</h3><p>H | His</p></div>
+                <div class="amino-acid-card"><h3>Isoleucine</h3><p>I | Ile</p></div>
+                <!-- Row 3 -->
+                <div class="amino-acid-card"><h3>Leucine</h3><p>L | Leu</p></div>
+                <div class="amino-acid-card"><h3>Lysine</h3><p>K | Lys</p></div>
+                <div class="amino-acid-card"><h3>Methionine</h3><p>M | Met</p></div>
+                <div class="amino-acid-card"><h3>Phenylalanine</h3><p>F | Phe</p></div>
+                <div class="amino-acid-card"><h3>Proline</h3><p>P | Pro</p></div>
+                <!-- Row 4 -->
+                <div class="amino-acid-card"><h3>Serine</h3><p>S | Ser</p></div>
+                <div class="amino-acid-card"><h3>Threonine</h3><p>T | Thr</p></div>
+                <div class="amino-acid-card"><h3>Tryptophan</h3><p>W | Trp</p></div>
+                <div class="amino-acid-card"><h3>Tyrosine</h3><p>Y | Tyr</p></div>
+                <div class="amino-acid-card"><h3>Valine</h3><p>V | Val</p></div>
+            </div>
+
+            <!-- Image placeholder -->
+            <img src="Amino Acids.png" alt="Amino Acids Diagram" class="project-image"
+                 onerror="this.onerror=null; this.src='https://placehold.co/1200x600/1b1a2b/ffffff?text=Image+Not+Found';">
+        </main>
+    </div>
+</body>
+</html>

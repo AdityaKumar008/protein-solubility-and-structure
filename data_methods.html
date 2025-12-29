@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data & Methods - Protein Production</title>
+    <!-- Google Fonts Import for 'Inter' -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS rules applied to all pages for consistency */
+        :root {
+            --bg: #0b0b0d;
+            --muted: rgba(255, 255, 255, 0.65);
+            --accent1: #6c2cf5;
+            --accent2: #3b8bff;
+            font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: linear-gradient(180deg, #0b0b0d 0%, #0e0b1a 50%, #1b1a2b 100%);
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+
+        /* The main container for the page content */
+        .container {
+            width: 100%;
+            max-width: 1200px; /* Limits content width on large screens */
+            margin: 0 auto; /* Center the container */
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end; /* Navbar to right side */
+            padding: 28px 0;
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 10px;
+            transition: all 0.25s ease;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+        
+        nav a.active {
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            font-weight: 525;
+            color: #fff;
+        }
+
+        /* Content area styling */
+        .page-content {
+            padding: 40px 0;
+        }
+
+        .page-content h1 {
+            font-size: 48px;
+            margin: 0 auto 50px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .method-section {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .method-section h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0 0 15px;
+            color: var(--accent2);
+            border-bottom: 2px solid var(--accent1);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .method-section p, .method-section li {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--muted);
+        }
+
+        .method-section ul {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        .method-section strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .bg-glow {
+            position: fixed;
+            right: -10vh;
+            top: -10vh;
+            width: 60vh;
+            height: 60vh;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4d2cff 0%, rgba(77, 44, 255, 0.2) 20%, transparent 50%);
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 900px) {
+            .page-content h1 { font-size: 40px; }
+            .method-section { padding: 25px; }
+            .method-section h2 { font-size: 24px; }
+            header { justify-content: center; padding: 15px 0; }
+            nav { font-size: 16px; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="container">
+        <header>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="protein_details.html">Protein Details</a>
+                <a href="data_methods.html" class="active">Data & Methods</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </header>
+
+        <main class="page-content">
+            <h1>Our Approach to Predicting Protein Solubility</h1>
+
+            <section class="method-section">
+                <h2>Dataset and Preprocessing</h2>
+                <p>
+                    The foundation of this project is a robust dataset of proteins from <strong><em>E. coli</em></strong>. Our primary data for model training was sourced from two files, <strong><a href="ecoli_train.csv" style="color: white; text-decoration: none;">ecoli_train</a></strong> and <strong><a href="ecoli_test.csv" style="color: white; text-decoration: none;">ecoli_test</a></strong>, containing sequences and their solubility labels. Separately, we utilized two reference libraries, <strong><a href="Human.csv" style="color: white; text-decoration: none;">Human.csv</a></strong> and <strong><a href="Ecoli.csv" style=" color: white; text-decoration: none;">Ecoli.csv</a></strong>, which contain proteins found in humans and E. coli, respectively. It is important to note that the 3D structure viewer will only display a model if the input UniProt ID exists within these two reference files, as they are used to look up the corresponding amino acid sequence. The training data underwent a rigorous preprocessing pipeline to clean, validate, and prepare it for model training, including removing duplicates and ensuring sequence integrity.
+                </p>
+            </section>
+
+            <section class="method-section">
+                <h2>Feature Engineering</h2>
+                <p>
+                    A raw amino acid sequence cannot be directly fed into a machine learning model. Therefore, we converted each sequence into a numerical format that captures its most essential properties. Our successful approach focused on two fundamental and powerful features:
+                </p>
+                <ul>
+                    <li><strong>Amino Acid Composition (AAC):</strong> This is the core feature of our model. For each protein, we calculated the frequency of each of the 20 standard amino acids. This creates a 20-dimensional vector that represents the protein's overall makeup.</li>
+                    <li><strong>Sequence Length:</strong> The total number of amino acids in the protein was included as an additional, crucial feature, as longer chains can have a higher tendency to misfold.</li>
+                </ul>
+                <p>
+                    By combining these 21 features, we created a simple yet highly effective numerical "fingerprint" for each protein, allowing the model to learn the patterns that distinguish soluble proteins from insoluble ones with high accuracy.
+                </p>
+            </section>
+
+            <section class="method-section">
+                <h2>Model Training and Selection</h2>
+                <p>
+                    We explored several machine learning algorithms, including <strong>Logistic Regression</strong>, <strong>Support Vector Machine (SVM)</strong>, and <strong>Random Forest</strong>. Each model was trained and evaluated on the independent test data. The <strong>Random Forest</strong> model emerged as the clear winner, consistently outperforming the others across key evaluation metrics like F1-score. Its strength in handling complex relationships and robustness against overfitting made it the ideal choice for our final predictive engine.
+                </p>
+            </section>
+
+            <section class="method-section">
+                <h2>3D Structure Retrieval</h2>
+                <p>
+                    To provide an interactive visualization, the application retrieves a protein's 3D structure when a valid UniProt ID is provided. Our Python server uses a smart, two-step approach:
+                </p>
+                 <ul>
+                    <li><strong>Primary Search (RCSB PDB):</strong> The server first queries the official Research Collaboratory for Structural Bioinformatics (RCSB) Protein Data Bank. This is the primary repository for experimentally determined structures.</li>
+                    <li><strong>Fallback Search (AlphaFold):</strong> If no structure is found in the RCSB PDB, the server automatically falls back to querying the AlphaFold Protein Structure Database, which contains highly accurate predicted structures.</li>
+                </ul>
+                <p>
+                    The server fetches the raw PDB file content from the first successful source and sends it directly to the webpage, where the 3Dmol.js library renders it for viewing.
+                </p>
+            </section>
+
+
+            <section class="method-section">
+                <h2>Tools and Technologies</h2>
+                <p>
+                    This project was made possible by leveraging a suite of powerful open-source libraries and databases:
+                </p>
+                <ul>
+                    <li><strong>Scikit-learn:</strong> For implementing, training, and evaluating machine learning models.</li>
+                    <li><strong>Pandas & NumPy:</strong> For data manipulation, cleaning, and numerical operations.</li>
+                    <li><strong>Flask:</strong> For building the Python backend server that connects our model to the website.</li>
+                    <li><strong>RCSB PDB & AlphaFold Database:</strong> For retrieving the 3D structures of proteins.</li>
+                    <li><strong>3Dmol.js & Chart.js:</strong> For rendering the interactive 3D viewer and data charts on the webpage.</li>
+                </ul>
+            </section>
+
+        </main>
+    </div>
+</body>
+</html>
+

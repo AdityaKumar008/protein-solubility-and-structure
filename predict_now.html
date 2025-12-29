@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Now - Protein Solubility</title>
+    <!-- Google Fonts Import for 'Inter' -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js Plugin for displaying labels/percentages -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <!-- Using a reliable CDN for the latest 3Dmol.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.1.0/3Dmol-min.js"></script>
+
+    <style>
+        :root {
+            --bg: #0b0b0d;
+            --muted: rgba(255, 255, 255, 0.65);
+            --accent1: #6c2cf5;
+            --accent2: #3b8bff;
+            font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: linear-gradient(180deg, #0b0b0d 0%, #0e0b1a 50%, #1b1a2b 100%);
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            padding: 28px 0;
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 10px;
+            transition: all 0.25s ease;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+        
+        nav a.active {
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            font-weight: 525;
+            color: #fff;
+        }
+
+        .page-content {
+            padding: 40px 0;
+        }
+
+        .page-content h1 {
+            font-size: 48px;
+            margin: 0 auto 20px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+        }
+
+        .page-content p.intro {
+            font-size: 18px;
+            color: var(--muted);
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 50px;
+        }
+
+        /* --- STYLE CHANGES FOR INPUT FORM --- */
+        .prediction-form {
+            display: flex;
+            flex-direction: column; /* Stack items vertically */
+            align-items: center;   /* Center items horizontally */
+            gap: 20px;             /* Space between input and button */
+            max-width: 800px;
+            margin: 0 auto 50px;
+        }
+
+        .prediction-form input[type="text"] {
+            width: 100%; /* Make input field take full width of container */
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            outline: none;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+
+        .prediction-form input[type="text"]:focus {
+            border-color: var(--accent1);
+        }
+        /* --- END OF STYLE CHANGES --- */
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            border: 0;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+
+        .btn.primary {
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            box-shadow: 0 10px 30px rgba(99, 41, 255, 0.18);
+            color: #fff;
+        }
+
+        .btn.primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(99, 41, 255, 0.25);
+        }
+        
+        .examples-section {
+            max-width: 800px;
+            margin: 0 auto 50px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .examples-section summary {
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--muted);
+        }
+
+        .examples-section pre {
+            background: #0b0b0d;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 14px;
+        }
+
+        #results-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+        }
+        
+        .result-card.full-width {
+            grid-column: 1 / -1; /* Span across both columns */
+        }
+        
+        .result-card h2 {
+            font-size: 24px;
+            margin: 0 0 20px;
+            color: var(--accent2);
+        }
+        
+        #prediction-output {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        #prediction-output.soluble { color: #4ade80; }
+        #prediction-output.insoluble { color: #f87171; }
+
+        #viewer-3d {
+            width: 100%;
+            height: 500px;
+            position: relative;
+        }
+
+        .bg-glow {
+            position: fixed;
+            right: -10vh;
+            top: -10vh;
+            width: 60vh;
+            height: 60vh;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4d2cff 0%, rgba(77, 44, 255, 0.2) 20%, transparent 50%);
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @media (max-width: 900px) {
+            #results-container { grid-template-columns: 1fr; }
+            header { justify-content: center; }
+            nav { font-size: 16px; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="container">
+        <header>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="protein_details.html">Protein Details</a>
+                <a href="data_methods.html">Data & Methods</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </header>
+
+        <main class="page-content">
+            <h1>Predict Protein Solubility</h1>
+            <p class="intro">
+                Enter a protein's amino acid sequence or its UniProt ID to predict its solubility when expressed in an <em>E. coli</em> system. The model will return a prediction, probability score, and detailed visualizations.
+            </p>
+
+            <div class="prediction-form">
+                <!-- Changed textarea to a single-line input -->
+                <input type="text" id="sequence-input" placeholder="Enter UniProt ID (e.g., P04425) or a raw amino acid sequence...">
+                <button id="predict-btn" class="btn primary">Predict</button>
+            </div>
+            
+            <details class="examples-section">
+                <summary>Click to see examples</summary>
+                <pre>
+UniProt IDs:
+O14793, O14832, P04425, P04993, P00350, P61626, A4D2B0, O15144
+
+Example Sequence:
+MSTASAASSSSSSSAGEMIEAPSQVLNFEEIDYKEIEVEEVVGRGAFGVVCKAKWRAKDVAIKQIESESERKAFIVELRQLSRVNHPNIVKLYGACLNPVCLVMEYAEGGSLYNVLHGAEPLPYYTAAHAMSWCLQCSQGVAYLHSMQPKALIHRDLKPPNLLLVAGGTVLKICDFGTACDIQTHMTNNKGSAAWMAPEVFEGSNYSEKCDVFSWGIILWEVITRRKPFDEIGGPAFRIMWAVHNGTRPPLIKNLPKPIESLMTRCWSKDPSQRPSMEEIVKIMTHLMRYFPGADEPLQYPCQYSDEGQSNSATSTGSFMDIASTNTSNKSDTNMEQVPATNDTIKRLESKLLKNQAKQQSESGRLSLGASRGSSVESLPPTSEGKRMSADMSEIEARIAATTAYSKPKRGHRKTASFGNILDVPEIVISGNGQPRRRSIQDLTVTGTEPGQVSSRSSSPSVRMITTSGPTSEKPTRSHPWTPDDSTDTNGSDNSIPMAYLTLDHQLQPLAPCPNSKESMAVFEQHCKMAQEYMKVQTEIALLLQRKQELVAELDQDEKDQQNTSRLVQEHKKLLDENKSLSTYYQQCKKQLEVIRSQQQKRQGTS
+
+MSVVPPNRSQTGWPRGVTQFGNKYIQQTKPLTLERTINLYPLTNYTFGTKEPLYEKDSSVAARFQRMREEFDKIGMRRTVEGVLIVHEHRLPHVLLLQLGTTFFKLPGGELNPGEDEVEGLKRLMTEILGRQDGVLQDWVIDDCIGNWWRPNFEPPQYPYIPAHITKPKEHKKLFLVQLQEKALFAVPKNYKLVAAPLFELYDNAPGYGPIISSLPQLLSRFNFIYN
+
+MALLTAAARLLGTKNASCLVLAARHASASSTNLKDILADLIPKEQARIKTFRQQHGKTVVGQITVDMMYGGMRGMKGLVYETSVLDPDEGIRFRGFSIPECQKLLPKAKGGEEPLPEGLFWLLVTGHIPTEEQVSWLSKEWAKRAALPSHVVTMLDNFPTNLHPMSQLSAAVTALNSESNFARAYAQGISRTKYWELIYEDSMDLIAKLPCVAAKIYRNLYREGSGIGAIDSNLDWSHNFTNMLGYTDHQFTELTRLYLTIHSDHEGGNVSAHTSHLVGSALSDPYLSFAAAMNGLAGPLHGLANQEVLVWLTQLQKEVGKDVSDEKLRDYIWNTLNSGRVVPGYGHAVLRKTDPRYTCQREFALKHLPNDPMFKLVAQLYKIVPNVLLEQGKAKNPWPNVDAHSGVLLQYYGMTEMNYYTVLFGVSRALGVLAQLIWSRALGFPLERPKSMSTEGLMKFVDSKSG
+                </pre>
+            </details>
+
+            <!-- Results container - hidden by default -->
+            <div id="results-container" style="display: none;">
+                <div class="result-card full-width">
+                    <h2>Prediction Result</h2>
+                    <p id="prediction-output"></p>
+                </div>
+                <div class="result-card">
+                    <h2>Solubility Probability</h2>
+                    <canvas id="solubility-pie-chart"></canvas>
+                </div>
+                <div class="result-card">
+                    <h2>Amino Acid Composition (%)</h2>
+                    <canvas id="aa-composition-chart"></canvas>
+                </div>
+                <div class="result-card">
+                    <h2>Solubility vs. pH</h2>
+                    <canvas id="ph-chart"></canvas>
+                </div>
+                <div class="result-card">
+                    <h2>Solubility vs. Temperature (°C)</h2>
+                    <canvas id="temp-chart"></canvas>
+                </div>
+                <div class="result-card full-width">
+                    <h2>Predicted 3D Structure</h2>
+                    <div id="viewer-3d"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Register the datalabels plugin globally
+        Chart.register(ChartDataLabels);
+
+        const predictBtn = document.getElementById('predict-btn');
+        const resultsContainer = document.getElementById('results-container');
+        const sequenceInput = document.getElementById('sequence-input');
+        let charts = {}; // To store chart instances
+
+        predictBtn.addEventListener('click', () => {
+            const inputValue = sequenceInput.value.trim();
+            if (!inputValue) {
+                alert("Please enter a sequence or UniProt ID.");
+                return;
+            }
+
+            predictBtn.textContent = "Predicting...";
+            predictBtn.disabled = true;
+            resultsContainer.style.display = 'none';
+            
+            fetch('https://protein-solubility-backend.onrender.com/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sequence: inputValue })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || `HTTP error! status: ${response.status}`) });
+                }
+                return response.json();
+            })
+            .then(data => {
+                displayResults(data);
+            })
+            .catch(error => {
+                console.error('Fetch Error:', error);
+                alert('An error occurred: ' + error.message);
+            })
+            .finally(() => {
+                predictBtn.textContent = "Predict";
+                predictBtn.disabled = false;
+            });
+        });
+        
+        function displayResults(data) {
+            resultsContainer.style.display = 'grid';
+
+            const predictionOutput = document.getElementById('prediction-output');
+            predictionOutput.textContent = data.prediction === 1 ? 'Soluble' : 'Insoluble';
+            predictionOutput.className = data.prediction === 1 ? 'soluble' : 'insoluble';
+            
+            Object.values(charts).forEach(chart => chart.destroy());
+
+            charts.pie = new Chart(document.getElementById('solubility-pie-chart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Soluble', 'Insoluble'],
+                    datasets: [{
+                        data: [data.probability.soluble, data.probability.insoluble],
+                        backgroundColor: ['#4ade80', '#f87171'],
+                        borderColor: 'rgba(255,255,255,0.1)'
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { labels: { color: 'white' } },
+                        datalabels: {
+                            formatter: (value, ctx) => ((value * 100).toFixed(1) + "%"),
+                            color: '#fff',
+                            font: { weight: 'bold', size: 14 }
+                        }
+                    }
+                }
+            });
+
+            charts.bar = new Chart(document.getElementById('aa-composition-chart'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(data.composition),
+                    datasets: [{
+                        label: 'Frequency (%)',
+                        data: Object.values(data.composition),
+                        backgroundColor: 'rgba(59, 130, 255, 0.6)'
+                    }]
+                },
+                options: { 
+                    scales: { 
+                        y: { ticks: { color: 'white' } }, 
+                        x: { ticks: { color: 'white' } } 
+                    }, 
+                    plugins: { 
+                        legend: { display: false },
+                        // **FIX**: This part disables the labels on the bars
+                        datalabels: {
+                            display: false
+                        }
+                    } 
+                }
+            });
+
+            charts.ph = new Chart(document.getElementById('ph-chart'), {
+                type: 'line',
+                data: {
+                    labels: data.ph_graph.ph_values,
+                    datasets: [{ label: 'Relative Solubility', data: data.ph_graph.solubility_values, borderColor: '#6c2cf5', tension: 0.1 }]
+                },
+                options: { scales: { y: { ticks: { color: 'white' } }, x: { ticks: { color: 'white' } } }, plugins: { legend: { labels: { color: 'white' } } } }
+            });
+
+            charts.temp = new Chart(document.getElementById('temp-chart'), {
+                type: 'line',
+                data: {
+                    labels: data.temp_graph.temp_values,
+                    datasets: [{ label: 'Relative Solubility', data: data.temp_graph.solubility_values, borderColor: '#f43f5e', tension: 0.1 }]
+                },
+                options: { scales: { y: { ticks: { color: 'white' } }, x: { ticks: { color: 'white' } } }, plugins: { legend: { labels: { color: 'white' } } } }
+            });
+
+            // 3D Viewer Logic
+            const viewerDiv = document.getElementById('viewer-3d');
+            viewerDiv.innerHTML = ''; 
+
+            if (data.pdb_data) {
+                try {
+                    let viewer = $3Dmol.createViewer(viewerDiv, { backgroundColor: '#0b0b0d' });
+                    viewer.addModel(data.pdb_data, 'pdb');
+                    viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
+                    viewer.zoomTo();
+                    viewer.render();
+                } catch (e) {
+                    console.error("3Dmol.js rendering error:", e);
+                    viewerDiv.innerHTML = '<p style="text-align:center; color: var(--muted);">An error occurred while rendering the 3D model.</p>';
+                }
+            } else if (data.uniprot_id && data.uniprot_id !== 'User Sequence') {
+                 viewerDiv.innerHTML = '<p style="text-align:center; color: var(--muted);">Could not load 3D model. The UniProt ID may not exist in the AlphaFold database.</p>';
+            } else {
+                viewerDiv.innerHTML = '<p style="text-align:center; color: var(--muted);">3D structure preview is not available for raw sequences.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
+

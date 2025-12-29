@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Protein Production</title>
+    <!-- Google Fonts Import for 'Inter' -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS rules applied to all pages for consistency */
+        :root {
+            --bg: #0b0b0d;
+            --muted: rgba(255, 255, 255, 0.65);
+            --accent1: #6c2cf5;
+            --accent2: #3b8bff;
+            font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: linear-gradient(180deg, #0b0b0d 0%, #0e0b1a 50%, #1b1a2b 100%);
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            padding: 28px 0;
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 10px;
+            transition: all 0.25s ease;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+        
+        nav a.active {
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            font-weight: 525;
+            color: #fff;
+        }
+
+        .page-content {
+            padding: 40px 0;
+        }
+
+        .page-content h1 {
+            font-size: 48px;
+            margin: 0 auto 50px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .about-section {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .about-section h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0 0 15px;
+            color: var(--accent2);
+        }
+
+        .about-section p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--muted);
+        }
+
+        /* --- STYLES FOR ACCORDION FAQ --- */
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 0;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-item summary {
+            font-size: 20px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            list-style: none;
+        }
+        
+        .faq-item summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        .faq-item summary::after {
+            content: '+';
+            font-size: 24px;
+            color: var(--accent2);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .faq-item[open] summary::after {
+            content: '−';
+            transform: rotate(180deg);
+        }
+
+        .faq-item p {
+            padding-top: 15px;
+            margin: 0;
+        }
+        
+        /* --- STYLES FOR ACKNOWLEDGEMENTS SECTION --- */
+        .acknowledgements-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 25px;
+        }
+        
+        .professor-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            width: 150px;
+        }
+
+        .professor-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 15px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            object-fit: cover;
+        }
+
+        .professor-name {
+            margin: 10px 0 5px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+        }
+
+        .institute-name {
+            margin: 0;
+            font-size: 14px;
+            color: var(--muted);
+            text-align: center;
+        }
+        
+        .bg-glow {
+            position: fixed;
+            right: -10vh;
+            top: -10vh;
+            width: 60vh;
+            height: 60vh;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4d2cff 0%, rgba(77, 44, 255, 0.2) 20%, transparent 50%);
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @media (max-width: 900px) {
+            .page-content h1 { font-size: 40px; }
+            .about-section { padding: 25px; }
+            .about-section h2 { font-size: 24px; }
+            header { justify-content: center; padding: 15px 0; }
+            nav { font-size: 16px; gap: 8px; flex-wrap: wrap; justify-content: center; }
+            .acknowledgements-content { flex-direction: column; align-items: center; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="container">
+        <header>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="protein_details.html">Protein Details</a>
+                <a href="data_methods.html">Data & Methods</a>
+                <a href="about.html" class="active">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </header>
+
+        <main class="page-content">
+            <h1>About The Project</h1>
+
+            <section class="about-section">
+                <h2>Project Overview</h2>
+                <p>
+                    This project presents a machine learning tool designed to predict the solubility of a protein based on its amino acid sequence or UniProt ID. By inputting a sequence or a UniProt ID, the model analyzes key features like its amino acid composition and sequence length to determine if the protein will be soluble or insoluble when expressed in an <strong><em>E. coli</em></strong> host system. The output provides a clear prediction, a probability score, detailed visualizations of amino acid composition, and an interactive 3D model of the protein's structure.
+                </p>
+            </section>
+
+            <section class="about-section">
+                <h2>Our Motivation & Guidance</h2>
+                <p>
+                    The inspiration for this project originated from an academic challenge to explore the implications of DeepMind's revolutionary AlphaFold. Guided by a professor, we were encouraged to apply similar predictive principles to another critical problem in biotechnology: protein solubility. Accurately predicting whether a protein will be soluble can save countless hours and resources in the lab, accelerating research and the development of new protein-based therapeutics. This tool represents our step towards solving that challenge.
+                </p>
+            </section>
+
+            <section class="about-section">
+                <h2>Frequently Asked Questions</h2>
+
+                <details class="faq-item">
+                    <summary>Why was Random Forest chosen as the best model ?</summary>
+                    <p>
+
+                        We trained and evaluated several models, including Logistic Regression, Support Vector Machines (SVM), and Random Forest. While all models performed well, Random Forest was selected as the final model because it consistently achieved the best balance of performance metrics, particularly the <strong>F1-score</strong>. The F1-score is crucial for this type of biological problem because it considers both precision and recall, ensuring the model is good at not only correctly identifying soluble proteins but also at not missing them. Random Forest is also an "ensemble" model, meaning it combines the predictions of many individual decision trees, which makes it very robust and less prone to overfitting the training data.
+
+                    </p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>What does the solubility percentage (e.g., 86% soluble) actually mean ?</summary>
+                    <p>
+
+                        The percentage represents the model's <strong>confidence score</strong>, not a literal physical measurement. It's the probability calculated by the Random Forest model that the given protein belongs to the "soluble" class.<br><br>
+
+                        - An <strong>86% soluble</strong> prediction means the model is highly confident that if you were to produce this protein in an E. coli system, the resulting population of protein molecules would be predominantly soluble and functional.<br><br>
+
+                        - A <strong>40% soluble</strong> prediction (which would be classified as "insoluble") means the model is confident (60% confident in insolubility) that the protein is likely to misfold and form non-functional inclusion bodies. It suggests a lower yield of active protein. This percentage is a powerful guide for scientists to prioritize which proteins to take forward for experimental validation.
+
+                    </p>
+                </details>
+
+                 <details class="faq-item">
+                    <summary>How is the composition graph created from a UniProt ID ?</summary>
+                    <p>
+                        This is an excellent question about the data workflow. The application does <strong>not</strong> go to an external database like AlphaFold to get the sequence for the graph. Instead, the process is much faster:<br><br>
+                        1. The Python server (`app.py`) starts by loading our local datasets (`Ecoli.csv` and `Human.csv`) into its memory.<br>
+                        2. It creates an internal, high-speed lookup table (a dictionary) that maps every UniProt ID to its corresponding amino acid sequence.<br>
+                        3. When you enter a UniProt ID, the server instantly finds the sequence in its memory, calculates the amino acid composition from that sequence, and then sends the data to the webpage to draw the bar graph.
+                    </p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>What is the significance of protein solubility within E. coli ?</summary>
+                    <p>
+                        This is a crucial question. The solubility of a protein inside *E. coli* determines its functionality. It's not about the protein affecting the bacteria's health, but about whether the protein itself can be useful.<br><br>
+                        - A <strong>soluble</strong> protein is one that has folded correctly into its proper 3D shape. In this state, it is functional and can perform its intended job (e.g., act as an enzyme). In biotechnology, producing soluble proteins is the primary goal.<br><br>
+                        - An <strong>insoluble</strong> protein is typically misfolded and non-functional. These proteins clump together inside the bacterium to form dense aggregates called "inclusion bodies." While the *E. coli* cell survives, the protein produced is useless for research or therapeutic purposes.
+                    </p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Why focus specifically on E.coli ?</summary>
+                    <p>
+                        <em>E. coli</em> is the most widely used host organism in biotechnology and molecular biology for producing recombinant proteins. It is well-understood, grows rapidly, and is very cost-effective. Because so many new proteins are first produced in *E. coli*, a tool that predicts solubility in this specific environment is incredibly valuable to the scientific community.
+                    </p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>What are the practical applications of this tool ?</summary>
+                    <p>
+                        This tool can significantly streamline the protein production pipeline. Researchers can screen hundreds of potential protein candidates virtually before starting expensive and time-consuming lab experiments. This helps in:
+                        <br>- <strong>Drug Development:</strong> Quickly identifying therapeutic protein candidates that are more likely to be stable and manufacturable.
+                        <br>- <strong>Academic Research:</strong> Reducing trial and error when expressing new proteins for study.
+                        <br>- <strong>Industrial Biotechnology:</strong> Optimizing the production of enzymes and other proteins used in various industries.
+                    </p>
+
+                </details>
+
+            </section>
+            <section class="about-section">
+                <h2>Acknowledgements</h2>
+                <div class="acknowledgements-content">
+                    <div class="professor-info">
+                        <img src="https://iitj.ac.in/PageImages/Peoples/06-2025/Krishna-Kumar-Balaraman-638853253695740054.jpg" alt="Professor's Photo" class="professor-photo">
+                        <h4 class="professor-name">Prof. Krishna Kumar Balaraman</h4>
+                    </div>
+                    <p>
+                        We would like to express our sincere gratitude to Prof. <strong>Krishna Kumar Balaraman</strong>, from <strong>IIT Jodhpur</strong>, for giving us this project. The main purpose behind this assignment was to help us learn and explore new concepts, and it truly enhanced our understanding and practical knowledge. We are thankful for his guidance and for the opportunity to work on this meaningful learning experience.
+                    </p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</body>
+</html>
+

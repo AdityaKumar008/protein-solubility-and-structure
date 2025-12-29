@@ -3,20 +3,8 @@ from flask_cors import CORS
 import joblib
 import pandas as pd
 import requests
-
 import os
 import gdown
-
-MODEL_PATH = "RandomForest_model.joblib"
-
-# Download model from Google Drive if not exists
-DRIVE_URL = "https://drive.google.com/uc?export=download&id=1yz1zswRwMUdGl895DLBposgWsEOI1JDE"
-
-if not os.path.exists(MODEL_PATH):
-    print("⬇️ Downloading model from Google Drive...")
-    gdown.download(DRIVE_URL, MODEL_PATH, quiet=False)
-    print("✅ Model downloaded!")
-
 
 # --- 1. SETUP THE FLASK APP ---
 app = Flask(__name__)
@@ -24,6 +12,9 @@ CORS(app)
 
 # --- 2. HELPER FUNCTION (Corrected to match training) ---
 def aa_composition(seq: str):
+    """
+    Return amino acid fractions + sequence length as features.
+    """
     VALID_AA = list("ACDEFGHIKLMNPQRSTVWY")
     s = seq.upper().strip()
     length = len(s) if len(s) > 0 else 1
@@ -35,50 +26,40 @@ def aa_composition(seq: str):
     feats["seq_len"] = float(length)
     return feats
 
-# --- GLOBAL VARS ---
+# --- 3. LOAD MODEL AND DATASETS ---
+# --- 3. LOAD MODEL AND DATASETS ---
 model = None
 uniprot_to_seq = {}
 seq_to_uniprot = {}
 X_train_columns = []
 
-# --- NEW: LAZY LOAD FUNCTIONS ---
-def load_model():
-    global model
-    if model is None:
-        print("⚙️ Loading model from file...")
-        model = joblib.load(MODEL_PATH)
-        print("✅ Model ready")
-    return model
+try:
+    MODEL_PATH = "RandomForest_model.joblib"
 
+    if not os.path.exists(MODEL_PATH):
+        print("⬇️ Downloading model from Google Drive...")
+        url = "https://drive.google.com/uc?id=1yz1zswRwMUdGl895DLBposgWsEOI1JDE"
+        gdown.download(url, MODEL_PATH, quiet=False)
 
-def load_datasets():
-    global uniprot_to_seq, seq_to_uniprot, X_train_columns
-    if uniprot_to_seq:
-        return  # Already loaded
+    model = joblib.load(MODEL_PATH)
+    print("✅ Model loaded successfully!")
 
-    print("📥 Downloading datasets from Drive...")
-    HUMAN_URL = "https://drive.google.com/uc?id=1hS-f7Ti7lg0deZvd-6b3opByrkbuY4og"
-    ECOLI_URL = "https://drive.google.com/uc?id=1xLTUZGSq7TIc0bPHHnBmDO-62022SdY2"
-
-    def fetch_csv(url, filename):
-        r = requests.get(url)
-        open(filename, "wb").write(r.content)
-        return pd.read_csv(filename)
-
-    df_A = fetch_csv(ECOLI_URL, "Ecoli.csv")
-    df_B = fetch_csv(HUMAN_URL, "Human.csv")
-
+    df_A = pd.read_csv("Ecoli.csv")
+    df_B = pd.read_csv("Human.csv")
     df_A.columns = df_A.columns.str.strip()
     df_B.columns = df_B.columns.str.strip()
     df_all = pd.concat([df_A, df_B], ignore_index=True)
 
     uniprot_to_seq = dict(zip(df_all['Entry'], df_all['Sequence']))
     seq_to_uniprot = dict(zip(df_all['Sequence'], df_all['Entry']))
+    print("✅ Datasets loaded.")
 
-    dummy = "ACDEFGHIKLMNPQRSTVWY"
-    X_train_columns = list(pd.DataFrame([aa_composition(dummy)]).columns)
+    dummy_seq = "ACDEFGHIKLMNPQRSTVWY"
+    X_train_columns = list(pd.DataFrame([aa_composition(dummy_seq)]).columns)
+    print(f"✅ Feature order locked ({len(X_train_columns)} features).")
 
-    print("🔥 Dataset READY")
+except Exception as e:
+    print(f"❌ Startup error: {e}")
 
 
 # --- 4. OTHER HELPER FUNCTIONS ---
@@ -104,10 +85,11 @@ def simulate_temp_effect(seq, base_prob):
     probs = [min(max(base_prob + (-hydrophobic * ((temp - 37) / 100)), 0), 1) for temp in temps]
     return temps, probs
 
-# --- START: PROTEIN STRUCTURE FETCH ---
+# --- START: REPLICATING YOUR JUPYTER NOTEBOOK LOGIC FOR 3D STRUCTURE ---
 def fetch_rcsb_structure(uniprot_id):
+    """Fetches protein structure from RCSB PDB using their robust API."""
     try:
-        print(f"🔍 Searching RCSB PDB for {uniprot_id}")
+        print(f"🔍 Method 1: Searching RCSB PDB for UniProt ID: {uniprot_id}")
         search_url = "https://search.rcsb.org/rcsbsearch/v2/query"
         query = {
             "query": {
@@ -127,34 +109,51 @@ def fetch_rcsb_structure(uniprot_id):
             data = response.json()
             if data.get('result_set'):
                 pdb_id = data['result_set'][0]['identifier']
+                print(f"✅ Found PDB ID in RCSB: {pdb_id}")
                 pdb_url = f"https://files.rcsb.org/download/{pdb_id}.pdb"
                 pdb_response = requests.get(pdb_url, timeout=30, headers=headers)
                 if pdb_response.status_code == 200:
+                    print("✅ PDB structure downloaded successfully from RCSB!")
                     return pdb_response.text
+        print("INFO: No structure found in RCSB PDB for this ID.")
         return None
-    except:
+    except Exception as e:
+        print(f"❌ Error during RCSB PDB search: {e}")
         return None
 
 def fetch_alphafold_direct(uniprot_id):
+    """Tries a direct download from AlphaFold as a fallback."""
     try:
+        print(f"🔍 Method 2: Trying direct AlphaFold download for: {uniprot_id}")
         url = f"https://alphafold.ebi.ac.uk/files/AF-{uniprot_id}-F1-model_v4.pdb"
-        response = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0'})
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(url, timeout=15, headers=headers)
         if response.status_code == 200:
+            print("✅ Direct AlphaFold download successful!")
             return response.text
         return None
-    except:
+    except Exception as e:
+        print(f"❌ Direct AlphaFold download failed: {e}")
         return None
 
 def get_protein_structure_smart(uniprot_id):
+    """Smart function to fetch 3D structure. Tries RCSB first, then AlphaFold."""
     if not uniprot_id or uniprot_id == "User Sequence": return None
-    return fetch_rcsb_structure(uniprot_id) or fetch_alphafold_direct(uniprot_id)
+    
+    # Method 1: Try RCSB PDB
+    structure = fetch_rcsb_structure(uniprot_id)
+    if structure: return structure
+    
+    # Method 2: Fallback to AlphaFold
+    structure = fetch_alphafold_direct(uniprot_id)
+    if structure: return structure
+    
+    print(f"❌ No 3D structure found in any database for {uniprot_id}")
+    return None
+# --- END: REPLICATING YOUR JUPYTER NOTEBOOK LOGIC FOR 3D STRUCTURE ---
 
 # --- 5. PREDICTION FUNCTION ---
 def make_prediction(user_input):
-
-    load_model()
-    load_datasets()
-
     sequence_to_use = None
     uniprot_id = "User Sequence"
 
@@ -168,7 +167,7 @@ def make_prediction(user_input):
         sequence_to_use = user_input
     
     if not sequence_to_use:
-        raise ValueError("Invalid Input. Enter UniProt ID or valid AA sequence.")
+        raise ValueError("Invalid Input. Please provide a valid UniProt ID or an amino acid sequence (min 10 characters).")
 
     features_dict = aa_composition(sequence_to_use)
     features_df = pd.DataFrame([features_dict])[X_train_columns]
@@ -181,6 +180,7 @@ def make_prediction(user_input):
     ph_vals, ph_probs = simulate_ph_effect(sequence_to_use, probabilities[1])
     temp_vals, temp_probs = simulate_temp_effect(sequence_to_use, probabilities[1])
     
+    # Call the new, robust function
     pdb_content = get_protein_structure_smart(uniprot_id)
 
     return {
@@ -196,17 +196,24 @@ def make_prediction(user_input):
 # --- 6. API ENDPOINT ---
 @app.route('/predict', methods=['POST'])
 def predict_endpoint():
+    if model is None:
+        return jsonify({"error": "Model not loaded. Check server logs."}), 500
+    
     try:
         data = request.get_json()
         user_input = data.get('sequence', '').upper().strip()
+
         if not user_input:
             return jsonify({"error": "No sequence provided"}), 400
-        return jsonify(make_prediction(user_input))
+
+        results = make_prediction(user_input)
+        return jsonify(results)
     except Exception as e:
+        print(f"Error during prediction: {e}")
         return jsonify({"error": str(e)}), 500
 
-# --- 7. RUN ---
+# --- 7. RUN THE APP ---
 if __name__ == '__main__':
     print("Starting Flask server for prediction...")
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0" ,debug=False, port=5000)
+

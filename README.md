@@ -5,7 +5,7 @@
 This project predicts **protein solubility in an *E. coli* expression environment** using a machine learning approach based on amino acid composition.
 It also demonstrates **automatic 3D protein structure retrieval and visualization** from established biological databases.
 
-> ⚠️ This repository focuses on **demonstration, architecture, and results**, as full backend deployment is not feasible under free hosting tiers.
+> ⚠️ This repository focuses on **demonstration, architecture, and results**, as full backend deployment with the trained model is not feasible under free hosting tiers.
 
 ---
 
@@ -30,6 +30,30 @@ The video shows:
 https://adityakumar008.github.io/protein-solubility-and-structure/
 
 > Note: This frontend is deployed using GitHub Pages and works independently of the backend.
+
+---
+
+## 🖼 Screenshots
+
+### Home Page
+
+![Home Page](screenshots/home.png)
+
+### Prediction Interface
+
+![Prediction Interface](screenshots/predict.png)
+
+### Prediction Results
+
+![Prediction Results](screenshots/result.png)
+
+### Analysis & Visualizations
+
+![Analysis](screenshots/analysis.png)
+
+### 3D Protein Structure Visualization
+
+![3D Structure](screenshots/structure.png)
 
 ---
 
@@ -63,16 +87,14 @@ Therefore:
 
 ---
 
-## 🚫 Why Backend Is Not Deployed Online
+## 🚫 Why Full Backend With Model Is Not Deployed Online
 
-The backend (Flask + ML model) is **not deployed** due to:
-- Large model size (~500 MB)
-- Free-tier hosting memory and storage limits
-- Cold-start and timeout issues for ML inference
+The trained model (~500 MB) prevents full backend deployment on free-tier hosting.  
+Everything else, including the **frontend, Flask code structure, and static resources**, is deployed and viewable.  
 
-Instead, this project demonstrates:
+This project still demonstrates:
 - Correct backend logic
-- Real-time predictions (shown in demo video)
+- Real-time predictions locally (shown in demo video)
 - Complete end-to-end workflow
 
 This approach is commonly accepted for **academic and portfolio projects**.
@@ -106,24 +128,23 @@ Visualization is handled on the frontend.
 
 > **Trained model (`*.joblib`) is not uploaded to GitHub due to size; see the demo video or train locally to run.**
 
-
-1. Clone the repository
-2. Add the trained model (`.joblib`) and datasets locally
-3. Install required Python dependencies
-4. Run the Flask backend (`app.py`)
-5. Open the frontend in a browser
+1. Clone the repository  
+2. Add the trained model (`.joblib`) and datasets locally  
+3. Install required Python dependencies  
+4. Run the Flask backend (`app.py`)  
+5. Open the frontend in a browser  
 6. Enter a **UniProt ID** or **protein sequence**
 
 ---
 
 ## 📁 Project Structure (Conceptual)
 
-- `app.py` – Flask backend
-- `Final_Code.py` – ML training & analysis
-- `*.csv` – Training datasets
-- `*.joblib` – Trained ML model (local only)
-- Frontend files – UI and visualization
-- Demo video – Full working proof
+- `app.py` – Flask backend  
+- `Final_Code.py` – ML training & analysis  
+- `*.csv` – Training datasets  
+- `*.joblib` – Trained ML model (local only)  
+- Frontend files – UI and visualization  
+- Demo video – Full working proof  
 
 ---
 

@@ -104,7 +104,8 @@ Visualization is handled on the frontend.
 
 ## ▶️ How to Run Locally
 
-> Backend files are excluded from GitHub due to size constraints.
+> **Trained model (`*.joblib`) is not uploaded to GitHub due to size; see the demo video or train locally to run.**
+
 
 1. Clone the repository
 2. Add the trained model (`.joblib`) and datasets locally

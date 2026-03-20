@@ -151,5 +151,4 @@ Visualization is handled on the frontend.
 ## 👤 Author
 
 **Aditya Kumar**  
-LinkedIn: https://www.linkedin.com/in/aditya-kumar-b7920b328  
-GitHub: https://github.com/AdityaKumar008
+LinkedIn: https://www.linkedin.com/in/aditya-kumar-b7920b328

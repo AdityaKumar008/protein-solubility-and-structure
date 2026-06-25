@@ -151,4 +151,4 @@ Visualization is handled on the frontend.
 ## 👤 Author
 
 **Aditya Kumar**  
-LinkedIn: https://www.linkedin.com/in/aditya-kumar-b7920b328
+LinkedIn: [linkedin.com/in/aditya-kumar-b7920b328](https://www.linkedin.com/in/aditya-kumar-b7920b328)
